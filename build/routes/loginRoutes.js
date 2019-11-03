@@ -24,3 +24,7 @@ router.get('/', function (req, res) {
         res.send("<div>\n        <div>You are not logged in</div>\n        <a href=\"/logoin\">Login</a>\n      </div>\n      ");
     }
 });
+router.get('/logout', function (req, res) {
+    req.session = undefined;
+    res.redirect('/');
+});
