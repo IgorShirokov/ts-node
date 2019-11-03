@@ -7,8 +7,9 @@ exports.Controller = function (routePrefix) { return function (target) {
         var router = AppRouter_1.AppRouter.getInstance();
         var routeHandler = target.prototype[key];
         var path = Reflect.getMetadata('path', target.prototype, key);
+        var method = Reflect.getMetadata('method', target.prototype, key);
         if (path) {
-            router.get("" + routePrefix + path, routeHandler);
+            router[method]("" + routePrefix + path, routeHandler);
         }
     }
 }; };
