@@ -9,6 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var routes_1 = require("./decorators/routes");
 var LoginController = /** @class */ (function () {
     function LoginController() {
     }
@@ -17,13 +18,13 @@ var LoginController = /** @class */ (function () {
     };
     ;
     __decorate([
-        GET('/login'),
+        routes_1.GET('/login'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [Object, Object]),
         __metadata("design:returntype", void 0)
     ], LoginController.prototype, "getLogin", null);
     LoginController = __decorate([
-        controller('/')
+        Controller('/auth')
     ], LoginController);
     return LoginController;
 }());
