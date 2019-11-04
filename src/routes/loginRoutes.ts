@@ -6,7 +6,6 @@ interface RequestWithBody extends Request {
 
 const requireAuth = (req: Request, res: Response, next: NextFunction): void => {
   if (req.session && req.session.logedIn === true) {
-    console.log('asdf');
     next();
     return;
   }
@@ -15,22 +14,12 @@ const requireAuth = (req: Request, res: Response, next: NextFunction): void => {
 
 const router = Router();
 
-router.post('/login', (req: RequestWithBody, res: Response) => {
-  const { email, password } = req.body;
-  if (email && password && email === 'test@test.com' && password === '1') {
-    req.session = { logedIn: true };
-    res.redirect('/');
-  } else {
-    res.send('Invalid email or password');
-  }
-});
-
 router.get('/', (req: Request, res: Response) => {
   if (req.session && req.session.logedIn) {
     res.send(
       `<div>
         <div>You are logged in</div>
-        <a href="/logout">Logout</a>
+        <a href="/auth/logout">Logout</a>
       </div>
       `
     );
@@ -38,7 +27,7 @@ router.get('/', (req: Request, res: Response) => {
     res.send(
       `<div>
         <div>You are not logged in</div>
-        <a href="/login">Login</a>
+        <a href="/auth/login">Login</a>
       </div>
       `
     );
