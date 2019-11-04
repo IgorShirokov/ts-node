@@ -9,7 +9,18 @@ const bodyValidators = (keys: string): RequestHandler => (
   req: Request,
   res: Response,
   next: NextFunction
-) => {};
+) => {
+  if (!req.body) {
+    res.status(422).send('Invalid request');
+  }
+  for (let key of keys) {
+    if (!req.body[key]) {
+      res.status(422).send('Invalid request');
+      return;
+    }
+  }
+  next();
+};
 
 export const Controller = (routePrefix: string) => (target: Function) => {
   for (let key in target.prototype) {
@@ -24,8 +35,18 @@ export const Controller = (routePrefix: string) => (target: Function) => {
     const middlewares =
       Reflect.getMetadata(MetadataKeys.middleware, target.prototype, key) || [];
 
+    const requiredBodyProps =
+      Reflect.getMetadata(MetadataKeys.validator, target.prototype, key) || [];
+
+    const validator = bodyValidators(requiredBodyProps);
+
     if (path) {
-      router[method](`${routePrefix}${path}`, ...middlewares, routeHandler);
+      router[method](
+        `${routePrefix}${path}`,
+        ...middlewares,
+        validator,
+        routeHandler
+      );
     }
   }
 };
