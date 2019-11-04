@@ -1,5 +1,6 @@
-import { MetadataKeys } from './metadatakeys';
 import 'reflect-metadata';
+
+import { MetadataKeys } from './metadatakeys';
 import { AppRouter } from '../../AppRouter';
 import { Methods } from './methods';
 
@@ -13,9 +14,11 @@ export const Controller = (routePrefix: string) => (target: Function) => {
       target.prototype,
       key
     );
+    const middlewares =
+      Reflect.getMetadata(MetadataKeys.middleware, target, key) || [];
 
     if (path) {
-      router[method](`${routePrefix}${path}`, routeHandler);
+      router[method](`${routePrefix}${path}`, ...middlewares, routeHandler);
     }
   }
 };
