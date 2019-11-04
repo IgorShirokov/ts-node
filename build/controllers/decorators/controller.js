@@ -10,19 +10,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
 var metadatakeys_1 = require("./metadatakeys");
 var AppRouter_1 = require("../../AppRouter");
-var bodyValidators = function (keys) { return function (req, res, next) {
-    if (!req.body) {
-        res.status(422).send('Invalid request');
-    }
-    for (var _i = 0, keys_1 = keys; _i < keys_1.length; _i++) {
-        var key = keys_1[_i];
-        if (!req.body[key]) {
-            res.status(422).send('Invalid request');
-            return;
-        }
-    }
-    next();
-}; };
+var middlewares_1 = require("../../middlewares");
 exports.Controller = function (routePrefix) { return function (target) {
     for (var key in target.prototype) {
         var router = AppRouter_1.AppRouter.getInstance();
@@ -31,7 +19,7 @@ exports.Controller = function (routePrefix) { return function (target) {
         var method = Reflect.getMetadata(metadatakeys_1.MetadataKeys.method, target.prototype, key);
         var middlewares = Reflect.getMetadata(metadatakeys_1.MetadataKeys.middleware, target.prototype, key) || [];
         var requiredBodyProps = Reflect.getMetadata(metadatakeys_1.MetadataKeys.validator, target.prototype, key) || [];
-        var validator = bodyValidators(requiredBodyProps);
+        var validator = middlewares_1.bodyValidators(requiredBodyProps);
         if (path) {
             router[method].apply(router, __spreadArrays(["" + routePrefix + path], middlewares, [validator,
                 routeHandler]));
